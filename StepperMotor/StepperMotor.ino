@@ -4,6 +4,7 @@
 
 //define step size
 #define stepsize 5 //1 step = 0.04mm, so 5steps=0.2mm
+#define maxstep 1000//max it can go is 1000 steps = 40mm in x&y directions
 
 //define number of steps in 1 rev of motor
 #define steps 200
@@ -39,32 +40,57 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
 
-  //move forward 0.2mm in positive x-direction
-  stepper1.move(stepsize);//moving 0.2mm (5 steps)
-  stepper1.runSpeedToPosition();//run at set speed until reach target position
+  if (click right) {//move forward 0.2mm in positive x-direction
+    stepper1.move(stepsize);//moving 0.2mm (5 steps)
+    stepper1.runSpeedToPosition();//run at set speed until reach target position
+  }
 
-  //move forward 0.2mm  in positive y-direction
-  stepper2.move(stepsize);//moving 0.2mm (5 steps)
-  stepper2.runSpeedToPosition();//run at set speed until reach target position
+  if (click UP) {//move forward 0.2mm  in positive y-direction
+    stepper2.move(stepsize);//moving 0.2mm (5 steps)
+    stepper2.runSpeedToPosition();//run at set speed until reach target position
+  }
 
-  //move forward 0.2mm  in negative x-direction
-  stepper1.move(-stepsize);//moving 0.2mm (5 steps)
-  stepper1.runSpeedToPosition();//run at set speed until reach target position
+  if (click left) {//move forward 0.2mm  in negative x-direction
+    stepper1.move(-stepsize);//moving 0.2mm (5 steps)
+    stepper1.runSpeedToPosition();//run at set speed until reach target position
+  }
 
-  //move forward 0.2mm in negative y-direction
-  stepper2.move(-stepsize);//moving 0.2mm (5 steps)
-  stepper2.runSpeedToPosition();//run at set speed until reach target position
+  if (click down) {//move forward 0.2mm in negative y-direction
+    stepper2.move(-stepsize);//moving 0.2mm (5 steps)
+    stepper2.runSpeedToPosition();//run at set speed until reach target position
+  }
 
-  //stop Motors
-  stepper1.stop();
-  stepper2.stop();
+  if (click stop) {//stop Motors
+    stepper1.stop();
+    stepper2.stop();
+  }
+
+  //while button is pressed, move infinietly
+  while (right is true) {
+    stepper1.move(maxstep);//move in +ve x-direction
+    stepper1.runSpeed();
+  }
+  while (left is true) {
+    stepper1.move(-maxstep);//move in -ve x-direction
+    stepper1.runSpeed();
+  }
+
+  while (up is true) {
+    stepper2.move(maxstep);//move in -ve y-direction
+    stepper2.runSpeed();
+  }
+
+  while (down is true) {
+    stepper2.move(-maxstep);//move in -ve y-direction
+    stepper2.runSpeed();
+  }
 
   //once click run
   if (click run) {
     int xstep = 0;
     int i = 0;
-    for (i = 1; i <= 5; i++) {
-      for (xstep = 1; xstep <= 10; xstep++) { //moving 10 steps
+    for (i = 1; i < 5; i++) {
+      for (xstep = 1; xstep < 10; xstep++) { //moving 10 steps
         //move in +ve x-direction 0.2mm/step
         stepper1.move(stepsize);
         stepper1.runSpeedToPosition();
@@ -74,7 +100,7 @@ void loop() {
       stepper2.move(stepsize); //<<need to check direction + or -
       stepper2.runSpeedToPosition();
       //**THEN CAPTURE IMAGE
-      for (xstep = 1; xstep <= 10; xstep++)  { //moving 10 steps
+      for (xstep = 1; xstep < 10; xstep++)  { //moving 10 steps
         //move in -ve x-direction 0.2mm/step
         stepper1.move(-stepsize);
         stepper1.runSpeedToPosition();
