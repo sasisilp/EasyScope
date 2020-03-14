@@ -1,4 +1,7 @@
 #include <Stepper.h>
+#include <SPI.h>
+byte address = 0x00;
+int CS = 10;
 
 //define step size
 #define stepsize 5 //1 step = 0.04mm, so 5steps=0.2mm
@@ -11,24 +14,22 @@
 
 // Define Motor Pins (2 Motors used)
 //for Motor1 (x-direction) NEED TO DEFINE PIN!!!
-#define motorPin1 4
-#define motorPin2 5
-#define motorPin3 6
-#define motorPin4 7
+#define 1_DirectionPin 5
+#define 1_StepsPin 6
 
 //for Motor2 (y-direction)
-#define motorPin5 8
-#define motorPin6 9
-#define motorPin7 10
-#define motorPin8 11
+#define 2_DirectionPin ??
+#define 2_StepsPin ??
 
 // Define two motor objects
 // The sequence 1-3-2-4 is required for proper sequencing of 2BBYJ48
-Stepper stepper1(stepsPerRev, motorPin1, motorPin3, motorPin2, motorPin4);//x-direction
-Stepper stepper2(stepsPerRev, motorPin5, motorPin7, motorPin6, motorPin8);//y-direction
+Stepper stepper1(stepsPerRev, 1_StepsPin, 1_DirectionPin);//x-direction
+Stepper stepper2(stepsPerRev, 2_StepsPin, 2_DirectionPin);//y-direction
 
 void setup() {
-  // put your setup code here, to run once:
+  //images capture
+  pinMode (CS, OUTPUT);
+  SPI.begin();
   //x-direction
   stepper1.setSpeed(rpm);
   //y-direction
@@ -77,23 +78,31 @@ if (click backward in y){
         //move in +ve x-direction 0.2mm/step
         stepper1.step(stepsize);
         delay(500);//delay 500ms
-        //**THEN CAPTURE IMAGE
+        digitalPotWrite(0);//capture image
       }
       //move in y-direction (downward) 0.2mm/step
       stepper2.step(stepsize); //<<need to check direction + or -
        delay(500);
-      //**THEN CAPTURE IMAGE
+      digitalPotWrite(0);
       for (xstep = 1; xstep <= 10; xstep++)  { //moving 10 steps
         //move in -ve x-direction 0.2mm/step
         stepper1.step(-stepsize);
         delay(500);
-        //**THEN CAPTURE IMAGE
+        digitalPotWrite(0);
       }
       //move in y-direction (downward) 0.2mm/step
       stepper2.step(stepsize); //<<need to check direction + or -
        delay(500);
-      //**THEN CAPTURE IMAGE
+      digitalPotWrite(0);
     }
   }
 
+}
+
+int digitalPotWrite(int value)
+{
+digitalWrite(CS, LOW);
+SPI.transfer(address);
+SPI.transfer(value);
+digitalWrite(CS, HIGH);
 }
