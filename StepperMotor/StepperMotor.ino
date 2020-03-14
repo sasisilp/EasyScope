@@ -12,8 +12,8 @@
 // Define Motor Pins (2 Motors used)
 //for Motor1 (x-direction) NEED TO DEFINE PIN!!!
 #define motorPin1 4
-#define motorPin2 5
-#define motorPin3 6
+#define motorPin2 5 //Step
+#define motorPin3 6 //Direction
 #define motorPin4 7
 
 //for Motor2 (y-direction)
